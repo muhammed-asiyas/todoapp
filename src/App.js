@@ -1,23 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import TodoItem from "./TodoItem";
 
 function App() {
+  const [text, setText] = useState("");
+  const [todos, setTodos] = useState([]);
+
+  // Fetch all todos
+  const loadTodos = async () => {
+    const res = await axios.get("http://localhost:3000/todos");
+    setTodos(res.data);
+  };
+
+  useEffect(() => {
+    loadTodos();
+  }, []);
+
+  // Add todo
+  const addTodo = async () => {
+    if (!text) return;
+    await axios.post("http://localhost:3000/todos", { text });
+    setText("");
+    loadTodos();
+  };
+
+  // Delete todo
+  const deleteTodo = async (id) => {
+    await axios.delete(`http://localhost:3000/todos/${id}`);
+    loadTodos();
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ padding: 20 }}>
+      <h2>Todo List App</h2>
+
+      <input
+        type="text"
+        placeholder="Enter todo"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      />
+      <button onClick={addTodo}>Add</button>
+
+      <div>
+        {todos.map((todo) => (
+          <TodoItem key={todo._id} todo={todo} deleteTodo={deleteTodo} />
+        ))}
+      </div>
     </div>
   );
 }
