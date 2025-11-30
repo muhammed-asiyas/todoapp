@@ -8,7 +8,7 @@ function App() {
 
   // Fetch all todos
   const loadTodos = async () => {
-    const res = await axios.get("http://localhost:3000/todos");
+    const res = await axios.get("https://todoappbackend-x56u.onrender.com/todos");
     setTodos(res.data);
   };
 
@@ -19,14 +19,14 @@ function App() {
   // Add todo
   const addTodo = async () => {
     if (!text) return;
-    await axios.post("http://localhost:3000/todos", { text });
+    await axios.post("https://todoappbackend-x56u.onrender.com/todos", { text });
     setText("");
     loadTodos();
   };
 
   // Delete todo
   const deleteTodo = async (id) => {
-    await axios.delete(`http://localhost:3000/todos/${id}`);
+    await axios.delete(`https://todoappbackend-x56u.onrender.com/todos/${id}`);
     loadTodos();
   };
 
